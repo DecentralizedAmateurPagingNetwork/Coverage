@@ -67,6 +67,9 @@ function loadLocalData($data) {
 
 // compare server and local data and run the propagation script if needed
 function compareAndRun($serverData, $localData) {
+	// create output-directory
+	if (!is_dir("./CoverageFiles") && !mkdir("./CoverageFiles", 0744)) die("[CRIT] Unable to create output-directory. Aborting...\n");
+
 	// create log-directory
 	if (!is_dir("./logs") && !mkdir("./logs", 0744)) die("[CRIT] Unable to create log-directory. Aborting...\n");
 
