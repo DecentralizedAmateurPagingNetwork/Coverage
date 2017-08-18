@@ -95,10 +95,17 @@ function compareAndRun($serverData, $localData) {
 		if (!$firstRun && $dateServer === $dateLocal) {
 			echo "[INFO] [" . $progress . "] [SKIP] " . $transmitter["name"] . "\n";
 		} else {
-			// check for invalid settings
+			// check for invalid power --> skip
 			if ($transmitter["power"] == 0) {
 				echo "[INFO] [" . $progress . "] [INVA] " . $transmitter["name"] . "\n";
+				file_put_contents("./logs/invalid_power.log", $transmitter["name"] . "\n", FILE_APPEND | LOCK_EX);
 				continue;
+			}
+
+			// check for invalid height --> warn
+			if ($transmitter["antennaAboveGroundLevel"] == 0) {
+				echo "[INFO] [" . $progress . "] [WARN] " . $transmitter["name"] . "\n";
+				file_put_contents("./logs/invalid_height.log", $transmitter["name"] . "\n", FILE_APPEND | LOCK_EX);
 			}
 
 			echo "[INFO] [" . $progress . "] [RUN ] " . $transmitter["name"] . "\n";
