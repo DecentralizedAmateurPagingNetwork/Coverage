@@ -147,7 +147,7 @@ function compareAndRun($serverData, $localData) {
 			exec($command);
 
 			// combine images into one
-			$imageSize = getimagesize($transmitter["name"] . "_red.png");
+			$imageSize = getimagesize("./CoverageFiles/" . $transmitter["name"] . "_red.png");
 			exec("convert -size " . $imageSize[0] . "x" . $imageSize[1]  . " xc:none " .
 				"./CoverageFiles/" . $transmitter["name"] . "_red.png -geometry +0+0 -composite " .
 				"./CoverageFiles/" . $transmitter["name"] . "_yellow.png -geometry +0+0 -composite " .
