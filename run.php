@@ -154,9 +154,9 @@ function compareAndRun($serverData, $localData) {
 				"./CoverageFiles/" . $transmitter["name"] . ".png");
 
 			// remove red/yellow/green images
-			unlink("./CoverageFiles/" . $transmitter["name"] . "_red.png");
-			unlink("./CoverageFiles/" . $transmitter["name"] . "_yellow.png");
-			unlink("./CoverageFiles/" . $transmitter["name"] . "_green.png");
+			@unlink("./CoverageFiles/" . $transmitter["name"] . "_red.png");
+			@unlink("./CoverageFiles/" . $transmitter["name"] . "_yellow.png");
+			@unlink("./CoverageFiles/" . $transmitter["name"] . "_green.png");
 		}
 	}
 }
