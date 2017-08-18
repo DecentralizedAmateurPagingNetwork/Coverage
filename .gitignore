@@ -1,0 +1,8 @@
+config.php
+local_data.json
+
+.lock
+run.log
+logs/
+
+missingHeightData.txt
