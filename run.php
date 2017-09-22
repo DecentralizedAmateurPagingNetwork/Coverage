@@ -29,10 +29,6 @@ if (count($_SERVER["argv"]) == 2 && $_SERVER["argv"][1] === "--force") $localRes
 compareAndRun($serverResult, $localResult);
 // ---------------------------------------------------
 
-// ---------- WRITE SERVER DATA ----------
-writeLocalData($serverResult);
-// ---------------------------------------
-
 // ---------- DO NOT REMOVE ----------
 unlink("./.lock");
 echo "\n----------\n   DONE   \n----------\n";
@@ -52,6 +48,7 @@ function loadServerData() {
 // load transmitters' "lastUpdate" value from local file
 function loadLocalData($data) {
 	$outputData = json_decode(@file_get_contents(LOCAL_FILE), true);
+	$outputData["firstRun"] = false;
 	if (!$outputData) {
 		$outputData = array();
 
@@ -92,7 +89,7 @@ function compareAndRun($serverData, $localData) {
 		}
 
 		// on first run: run script on every transmitter
-		$firstRun = array_key_exists("firstRun", $localData);
+		$firstRun = array_key_exists("firstRun", $localData) && $localData["firstRun"];
 
 		// compare dates if not first run
 		if (!$firstRun && $dateServer === $dateLocal) {
@@ -161,15 +158,10 @@ function compareAndRun($serverData, $localData) {
 			@unlink("./CoverageFiles/" . $transmitter["name"] . "_red.png");
 			@unlink("./CoverageFiles/" . $transmitter["name"] . "_yellow.png");
 			@unlink("./CoverageFiles/" . $transmitter["name"] . "_green.png");
+
+			// update local_data.json
+			$localData[$transmitter["name"]] = $transmitter["lastUpdate"];
+			file_put_contents(LOCAL_FILE, json_encode($localData, JSON_PRETTY_PRINT), LOCK_EX);
 		}
 	}
-}
-
-// write transmitters' "lastUpdate" value to local file
-function writeLocalData($data) {
-	$outputData = array();
-	foreach (json_decode($data, true) as &$transmitter) {
-		$outputData[$transmitter["name"]] = $transmitter["lastUpdate"];
-	}
-	file_put_contents(LOCAL_FILE, json_encode($outputData, JSON_PRETTY_PRINT), LOCK_EX);
 }
