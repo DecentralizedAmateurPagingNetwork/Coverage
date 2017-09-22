@@ -22,7 +22,15 @@ $localResult = loadLocalData($serverResult);
 // ------------------------------------
 
 // ---------- CHECK PARAMETERS ----------
-if (count($_SERVER["argv"]) == 2 && $_SERVER["argv"][1] === "--force") $localResult["firstRun"] = true;
+if (count($_SERVER["argv"]) >= 2) {
+	if ($_SERVER["argv"][1] === "--force") {
+		$localResult["firstRun"] = true;
+
+		if (count($_SERVER["argv"]) == 3) {
+			$localResult["forceTransmitter"] = $_SERVER["argv"][2];
+		}
+	}
+}
 // --------------------------------------
 
 // ---------- COMPARE SERVER AND LOCAL DATA ----------
@@ -49,6 +57,7 @@ function loadServerData() {
 function loadLocalData($data) {
 	$outputData = json_decode(@file_get_contents(LOCAL_FILE), true);
 	$outputData["firstRun"] = false;
+	$outputData["forceTransmitter"] = false;
 	if (!$outputData) {
 		$outputData = array();
 
@@ -72,6 +81,14 @@ function compareAndRun($serverData, $localData) {
 
 	// check every transmitter and process it
 	$decodedServerData = json_decode($serverData, true);
+
+	// if forced transmitter: remove all other transmitters
+	foreach($decodedServerData as $key => $transmitter) {
+		if ($localData["forceTransmitter"] !== false && $transmitter["name"] !== $localData["forceTransmitter"]) {
+			unset($decodedServerData[$key]);
+		}
+	}
+
 	$currentItem = 0;
 	foreach ($decodedServerData as &$transmitter) {
 		// prepare progress-string
@@ -88,11 +105,9 @@ function compareAndRun($serverData, $localData) {
 			$dateLocal = strtotime($localData[$transmitter["name"]]);
 		}
 
-		// on first run: run script on every transmitter
-		$firstRun = array_key_exists("firstRun", $localData) && $localData["firstRun"];
-
 		// compare dates if not first run
-		if (!$firstRun && $dateServer === $dateLocal) {
+		// on first run: run script on every transmitter
+		if (!$localData["firstRun"] && $dateServer === $dateLocal) {
 			echo "[INFO] [" . $progress . "] [SKIP] " . $transmitter["name"] . "\n";
 		} else {
 			// check for invalid power --> skip
