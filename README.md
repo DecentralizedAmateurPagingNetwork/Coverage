@@ -16,6 +16,7 @@ define("DAPNET_AUTH", "Basic >>base64Of(user:passwd)<<");
 define("LOCAL_FILE", "./local_data.json");
 define("PATH_TO_SIMULATION", "/path/to/hamnet_propagation/HamNet_Simulation");
 define("PATH_TO_SIMFILES", "/path/to/dapnet_propagation/");
+define("MAX_RANGE", 60000);
 define("DEFAULT_RESOLUTION", 30);
 define("DEFAULT_FREQUENCY", 440);
 define("DEFAULT_ANTENNA_TYPE", "Omni");

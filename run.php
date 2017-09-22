@@ -119,7 +119,7 @@ function compareAndRun($serverData, $localData) {
 			// calculate range based on transmitter properties
 			$rangehelp = ($power + $transmitter["antennaGainDbi"] + DEFAULT_GAIN_RECEIVER - DEFAULT_CABLE_LOSS + 59.6 - 20 * log10(DEFAULT_FREQUENCY)) / 20;
 			$range = ceil(pow(10, $rangehelp) * 1000);
-			if ($range > 60000) $range = 60000;
+			if ($range > MAX_RANGE) $range = MAX_RANGE;
 
 			// build and call the processing script
 			$command = "nice -n 19 " .
