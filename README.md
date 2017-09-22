@@ -35,6 +35,10 @@ Next edit the lines relevant to you (e.g. authentication) and save the file.
 php run.php
 ```
 
+### Parameters
+* `--force`: Process all transmitters
+* `--force <transmitterName>`: Process given transmitter
+
 ### Lockfile
 The script creates a `.lock`-file to prevent it from running multiple times.
 You may need to remove it manually when you abort the script's execution.
